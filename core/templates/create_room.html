@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/create_room.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <h2 class="form-title">Create Room</h2>
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="field-group">
+                <label for="topic-input">Topic</label>
+                <input 
+                    type="text" 
+                    id="topic-input"
+                    name="topic" 
+                    placeholder="Enter or select a topic" 
+                    list="topic-list"
+                    autocomplete="off"
+                >
+                <datalist id="topic-list">
+                    {% for topic in topics %}
+                        <option value="{{ topic.name }}"></option>
+                    {% endfor %}
+                </datalist>
+            </div>
+
+            {{ form.as_p }}
+
+            <div class="form-actions">
+                <a href="{% url 'home' %}" class="btn-cancel">Cancel</a>
+                <button type="submit" class="btn-submit">Create Room</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

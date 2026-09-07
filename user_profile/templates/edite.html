@@ -1,0 +1,22 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'profile/edite_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <h2 class="form-title">Edit Profile</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="form-actions">
+                <a href="{% url 'profile' request.user.id %}" class="btn-cancel">Cancel</a>
+                <button type="submit" class="btn-submit">Update Profile</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'profile/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <a href="{% url 'home' %}" class="back-link">&larr; Go back</a>
+
+    <!-- Profile Card Header -->
+    <section class="profile-card">
+        <div class="profile-header">
+            <div class="avatar-wrapper">
+                {% if user.image %}
+                    <img src="{{ user.image.url }}" alt="{{ user.username }}" class="profile-avatar">
+                {% else %}
+                    <div class="profile-avatar-placeholder">{{ user.username|slice:":1"|upper }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="profile-info">
+                <div class="profile-top-row">
+                    <h2 class="profile-username">@{{ user.username }}</h2>
+                    <div class="profile-header-actions">
+                        {% if request.user == user %}
+                            <a href="{% url 'edite-profile' user.id %}" class="btn-edit-profile">Edit Profile</a>
+                        {% endif %}
+                        <a href="#" class="btn-chat">Chat</a>
+                    </div>
+                </div>
+                {% if user.first_name or user.last_name %}
+                    <p class="profile-fullname">{{ user.first_name }} {{ user.last_name }}</p>
+                {% endif %}
+                {% if user.about %}
+                    <p class="profile-about">{{ user.about }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <div class="profile-grid">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Topics</h3>
+                <span class="badge">{{ topics.all.count }}</span>
+            </div>
+            <hr class="divider">
+            <nav class="topic-list">
+                <a href="{% url 'profile' user.id %}" class="topic-item active">All</a>
+                {% for topic in topics %}
+                    <a href="{% url 'profile' user.id %}?topic={{ topic.id }}" class="topic-item">
+                        {{ topic.name }}
+                    </a>
+                {% endfor %}
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="rooms-section">
+            <!-- Created Rooms Block -->
+            <div class="rooms-group">
+                <div class="section-header">
+                    <h2>Created Rooms</h2>
+                    {% if request.user == user %}
+                        <a href="{% url 'create-room' %}" class="btn-create">+ Create Room</a>
+                    {% endif %}
+                </div>
+
+                {% for room in rooms %}
+                    <article class="room-card">
+                        <div class="room-card-header">
+                            <div class="room-host-meta">
+                                <a href="{% url 'profile' room.host.id %}" class="host-link">@{{ room.host.username }}</a>
+                                <span class="time-stamp">{{ room.created_at|timesince }} ago</span>
+                            </div>
+                            {% if request.user == room.host %}
+                                <div class="room-actions">
+                                    <a href="{% url 'update-room' room.id %}" class="btn-update">Edit</a>
+                                    <a href="{% url 'delete-room' room.id %}" class="btn-delete">Delete</a>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <h3 class="room-title">
+                            <a href="{% url 'room' room.id %}">{{ room.name }}</a>
+                        </h3>
+                        {% if room.description %}
+                            <p class="room-description">{{ room.description }}</p>
+                        {% endif %}
+
+                        <div class="room-card-footer">
+                            <span class="channel-count">
+                                {% if room.channels %}
+                                    {{ room.channels.all.count }} Channels Available
+                                {% else %}
+                                    No channel created yet
+                                {% endif %}
+                            </span>
+                            <div class="room-stats">
+                                <span class="participant-count">{{ room.participants.all.count }} Joined</span>
+                                {% if room.topic %}
+                                    <span class="topic-badge">{{ room.topic.name }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <p class="empty-state">No Room Created</p>
+                {% endfor %}
+            </div>
+
+            <!-- Joined Rooms Block -->
+            <div class="rooms-group">
+                <div class="section-header">
+                    <h2>Joined Rooms</h2>
+                </div>
+
+                {% for room in joined_rooms %}
+                    <article class="room-card">
+                        <div class="room-card-header">
+                            <div class="room-host-meta">
+                                <a href="{% url 'profile' room.host.id %}" class="host-link">@{{ room.host.username }}</a>
+                                <span class="time-stamp">{{ room.created_at|timesince }} ago</span>
+                            </div>
+                        </div>
+
+                        <h3 class="room-title">
+                            <a href="{% url 'room' room.id %}">{{ room.name }}</a>
+                        </h3>
+                        {% if room.description %}
+                            <p class="room-description">{{ room.description }}</p>
+                        {% endif %}
+
+                        <div class="room-card-footer">
+                            <span class="channel-count">
+                                {% if room.channels %}
+                                    {{ room.channels.all.count }} Channels Available
+                                {% else %}
+                                    No channel created yet
+                                {% endif %}
+                            </span>
+                            <div class="room-stats">
+                                <span class="participant-count">{{ room.participants.all.count }} Joined</span>
+                                {% if room.topic %}
+                                    <span class="topic-badge">{{ room.topic.name }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <p class="empty-state">No Joined Room</p>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

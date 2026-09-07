@@ -1,0 +1,84 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>Topics</h3>
+            <span class="badge">{{ topics.all.count }}</span>
+        </div>
+        <hr class="divider">
+        <nav class="topic-list">
+            <a href="{% url 'home' %}" class="topic-item active">All</a>
+            {% for topic in topics %}
+                <a href="{% url 'home' %}?topic={{ topic.id }}" class="topic-item">
+                    {{ topic.name }}
+                </a>
+            {% endfor %}
+        </nav>
+    </aside>
+
+    <!-- Main Feed: Rooms -->
+    <main class="room-container">
+        <div class="feed-header">
+            <h2>Rooms</h2>
+            <a href="{% url 'create-room' %}" class="btn-primary">+ Create Room</a>
+        </div>
+
+        <div class="room-list">
+            {% for room in rooms %}
+                <article class="room-card">
+                    <header class="room-card-header">
+                        <div class="host-info">
+                            <a href="{% url 'profile' room.host.id %}" class="host-name">@{{ room.host.username }}</a>
+                            <span class="time-ago">• {{ room.created_at|timesince }} ago</span>
+                        </div>
+                        
+                        {% if request.user == room.host %}
+                            <div class="card-actions">
+                                <a href="{% url 'update-room' room.id %}" class="action-link edit">Edit</a>
+                                <a href="{% url 'delete-room' room.id %}" class="action-link delete">Delete</a>
+                            </div>
+                        {% endif %}
+                    </header>
+
+                    <div class="room-card-body">
+                        <h3 class="room-title">
+                            <a href="{% url 'room' room.id %}">{{ room.name }}</a>
+                        </h3>
+                        {% if room.description %}
+                            <p class="room-desc">{{ room.description }}</p>
+                        {% endif %}
+                    </div>
+
+                    <footer class="room-card-footer">
+                        <div class="channel-info">
+                            {% if room.channels %}
+                                <span>{{ room.channels.all.count }} Channels</span>
+                            {% else %}
+                                <span class="text-muted">No channels created</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="meta-tags">
+                            <span class="topic-tag">{{ room.topic.name }}</span>
+                            <a href="{% url 'join' room.id %}" class="join-btn">
+                                {{ room.participants.all.count }} Joined
+                            </a>
+                        </div>
+                    </footer>
+                </article>
+            {% empty %}
+                <div class="empty-state">
+                    <p>No rooms available right now.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+</div>
+{% endblock %}

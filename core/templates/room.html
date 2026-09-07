@@ -1,0 +1,56 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/room.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="room-card">
+        <header class="room-header">
+            <h2 class="room-title">{{ room.name }}</h2>
+            <div class="room-header-actions">
+                {% if request.user == room.host %}
+                    <a href="{% url 'create-channel' room.id %}" class="btn-create">+ New Channel</a>
+                    <div class="card-actions">
+                        <a href="{% url 'update-room' room.id %}" class="action-link edit">Edit</a>
+                        <a href="{% url 'delete-room' room.id %}" class="action-link delete">Delete</a>
+                    </div>
+                {% elif request.user in room.participants.all %}
+                    <a href="{% url 'disjoin' room.id %}" class="btn-disjoin">Disjoin</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <p class="channel-section-title">Channels</p>
+
+        {% if channels %}
+            <ul class="channel-list">
+                {% for channel in channels %}
+                    <li class="channel-item">
+                        <div class="channel-row">
+                            <a href="{% url 'channel' channel.id %}" class="channel-link"># {{ channel.name }}</a>
+                            {% if request.user == room.host %}
+                                <div class="channel-actions">
+                                    <a href="{% url 'update-channel' channel.id %}" class="btn-update">Update</a>
+                                    <form method="post" action="{% url 'delete-channel' channel.id %}" class="delete-form">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-delete">Delete</button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-channels">No channels created in this room yet.</p>
+        {% endif %}
+
+        <div class="room-footer">
+            <a href="{% url 'home' %}" class="back-link">&larr; Go back</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

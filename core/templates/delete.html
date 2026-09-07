@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/delete.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="delete-container">
+    <div class="delete-card">
+        <h2 class="delete-title">Delete Confirmation</h2>
+        <p class="delete-message">
+            Are you sure you want to delete <span class="delete-object-name">"{{ obj }}"</span>? This action cannot be undone.
+        </p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="delete-actions">
+                <a href="{{ request.META.HTTP_REFERER }}" class="btn-cancel">Go back</a>
+                <button type="submit" class="btn-confirm">Confirm Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

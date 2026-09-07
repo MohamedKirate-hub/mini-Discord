@@ -1,0 +1,266 @@
+:root {
+  --bg-main: #0f172a;
+  --bg-card: #1e293b;
+  --bg-hover: #334155;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --danger: #ef4444;
+}
+
+/* Base Layout Grid */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.25rem;
+  position: sticky;
+  top: 2rem;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-header h3 {
+  font-size: 1.1rem;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.badge {
+  background-color: var(--accent);
+  color: #ffffff;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 1rem 0;
+}
+
+.topic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.topic-item {
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.topic-item:hover,
+.topic-item.active {
+  background-color: var(--bg-hover);
+  color: var(--text-main);
+}
+
+/* Main Feed & Room List */
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.feed-header h2 {
+  font-size: 1.5rem;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+}
+
+.room-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.room-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Room Header & Host Info */
+.room-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.host-name {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.host-name:hover {
+  text-decoration: underline;
+}
+
+.time-ago {
+  color: var(--text-muted);
+  margin-left: 0.25rem;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.action-link {
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.action-link.edit {
+  color: var(--text-muted);
+}
+
+.action-link.edit:hover {
+  color: var(--text-main);
+}
+
+.action-link.delete {
+  color: var(--danger);
+}
+
+.action-link.delete:hover {
+  opacity: 0.8;
+}
+
+/* Room Content */
+.room-title {
+  margin: 0;
+}
+
+.room-title a {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.room-title a:hover {
+  color: var(--accent);
+}
+
+.room-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.4rem;
+  line-height: 1.5;
+}
+
+/* Room Card Footer */
+.room-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.meta-tags {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.topic-tag {
+  background-color: var(--bg-main);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+.join-btn {
+  background-color: var(--bg-hover);
+  color: var(--text-main);
+  text-decoration: none;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.join-btn:hover {
+  background-color: var(--accent);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  color: var(--text-muted);
+  border: 1px dashed var(--border-color);
+}
+
+/* Responsive View */
+@media (max-width: 768px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar {
+    position: static;
+  }
+}

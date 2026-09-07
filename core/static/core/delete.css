@@ -1,0 +1,89 @@
+:root {
+  --bg-main: #0f172a;
+  --bg-card: #1e293b;
+  --bg-hover: #334155;
+  --accent-danger: #ef4444;
+  --accent-danger-hover: #dc2626;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+}
+
+/* Page Outer Container */
+.delete-container {
+  max-width: 450px;
+  margin: 4rem auto;
+  padding: 0 1.5rem;
+}
+
+/* Confirmation Card */
+.delete-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.delete-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 1rem;
+}
+
+.delete-message {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 1.75rem;
+  line-height: 1.5;
+}
+
+.delete-object-name {
+  color: var(--text-main);
+  font-weight: 600;
+  word-break: break-word;
+}
+
+/* Action Buttons */
+.delete-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.btn-cancel {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-main);
+  transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+  color: var(--text-main);
+  background-color: var(--bg-hover);
+}
+
+.btn-confirm {
+  background-color: var(--accent-danger);
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-confirm:hover {
+  background-color: var(--accent-danger-hover);
+}

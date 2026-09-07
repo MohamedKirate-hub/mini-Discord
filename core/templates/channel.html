@@ -1,0 +1,51 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/channel.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-card">
+        <header class="chat-header">
+            <a href="{% url 'room' room.id %}">Back</a>
+            <h2 class="channel-name"># {{ room.name }}</h2>
+        </header>
+
+        <main class="message-feed">
+            {% for message in messages %}
+                <article class="message-card">
+                    <div class="message-meta">
+                        <div class="author-info">
+                            <a href="{% url 'profile' message.owner.id %}" class="message-author">@{{ message.owner.username }}</a>
+                            <span class="message-time">• {{ message.created_at|timesince }} ago</span>
+                        </div>
+                        {% if request.user == message.owner %}
+                            <a href="{% url 'delete-message' message.id %}" class="message-delete-link">Delete</a>
+                        {% endif %}
+                    </div>
+                    <p class="message-body">{{ message.body }}</p>
+                </article>
+            {% empty %}
+                <div class="empty-feed">
+                    <p>No messages in this channel yet. Start the conversation below!</p>
+                </div>
+            {% endfor %}
+        </main>
+
+        <form method="get" class="chat-input-form">
+            <div class="input-wrapper">
+                <input 
+                    type="text" 
+                    name="body" 
+                    placeholder="Write a message and press Enter..." 
+                    autocomplete="off" 
+                    required
+                >
+                <button type="submit" class="btn-send">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
