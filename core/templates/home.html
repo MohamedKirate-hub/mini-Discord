@@ -7,27 +7,32 @@
 
 {% block content %}
 <div class="dashboard-container">
-    <aside class="sidebar">
+
+    <!-- Column 1: Topics Sidebar -->
+    <aside class="sidebar topics-sidebar">
         <div class="sidebar-header">
             <h3>Topics</h3>
             <span class="badge">{{ topics.all.count }}</span>
         </div>
         <hr class="divider">
         <nav class="topic-list">
-            <a href="{% url 'home' %}" class="topic-item active">All</a>
+            <a href="{% url 'home' %}" class="topic-item {% if not request.GET.topic %}active{% endif %}">All</a>
             {% for topic in topics %}
-                <a href="{% url 'home' %}?topic={{ topic.id }}" class="topic-item">
+                <a href="{% url 'home' %}?topic={{ topic.id }}" 
+                   class="topic-item {% if request.GET.topic == topic.id|stringformat:'s' %}active{% endif %}">
                     {{ topic.name }}
                 </a>
             {% endfor %}
         </nav>
     </aside>
 
-    <!-- Main Feed: Rooms -->
+    <!-- Column 2: Main Feed -->
     <main class="room-container">
         <div class="feed-header">
             <h2>Rooms</h2>
-            <a href="{% url 'create-room' %}" class="btn-primary">+ Create Room</a>
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'create-room' %}" class="btn-primary">+ Create Room</a>
+            {% endif %}
         </div>
 
         <div class="room-list">
@@ -58,8 +63,8 @@
 
                     <footer class="room-card-footer">
                         <div class="channel-info">
-                            {% if room.channels %}
-                                <span>{{ room.channels.all.count }} Channels</span>
+                            {% if room.channels.exists %}
+                                <span>{{ room.channels.count }} Channels</span>
                             {% else %}
                                 <span class="text-muted">No channels created</span>
                             {% endif %}
@@ -67,9 +72,17 @@
 
                         <div class="meta-tags">
                             <span class="topic-tag">{{ room.topic.name }}</span>
-                            <a href="{% url 'join' room.id %}" class="join-btn">
-                                {{ room.participants.all.count }} Joined
-                            </a>
+                            <p>
+                                {{ room.participants.count }}
+                                {% if room.participants.count == 1 %}
+                                    person has joined
+                                {% else %}
+                                    people have joined
+                                {% endif %}
+                            </p>
+                            {% if request.user.is_authenticated and request.user not in room.participants.all %}
+                                <a href="{% url 'join' room.id %}" class="join-btn">Join</a>
+                            {% endif %}
                         </div>
                     </footer>
                 </article>

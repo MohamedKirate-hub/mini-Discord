@@ -8,6 +8,7 @@ urlpatterns = [
     path('account/', include('accounts.urls')),
     path('profile/', include('user_profile.urls')),
     path('', include('core.urls')), 
+    path('conversation/', include('conversation.urls')),
 ]
 
 if settings.DEBUG:

@@ -44,12 +44,11 @@ def delete_room_view(request, pk):
         return redirect('home')
     context = {'obj': room}
     return render(request, 'delete.html', context)
-    
 
 def home_page(request):
     query = request.GET.get('query', '')
     topic_id = request.GET.get('topic', '')
-    topics = Topic.objects.all()
+    topics = Topic.objects.all()[0:5]
     rooms = Room.objects.filter(Q(name__icontains=query) | Q(description__icontains=query) |
                                 Q(topic__name__icontains=query) |
                                 Q(host__username__icontains=query))

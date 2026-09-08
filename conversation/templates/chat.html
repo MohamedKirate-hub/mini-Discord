@@ -1,0 +1,69 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'conversation/chat.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="chat-card">
+        <header class="chat-header">
+            <h1>Conversation</h1>
+            <a href="{% url 'delete-conversation' conversation_room.id %}">Delete</a>
+        </header>
+
+        <div class="message-stream" id="messageStream">
+            {% for message in messages %}
+                {% if message.owner == request.user %}
+                    <div class="message-wrapper sent">
+                        <div class="message-bubble">
+                            <a href="{% url 'delete-conversation-message' message.id %}" class="delete-msg-link">
+                                Delete message
+                            </a>
+                            <span>{{ message.body }}</span>
+                        </div>
+                        <span class="message-time">{{ message.created_at|timesince }} ago</span>
+                    </div>
+                {% else %}
+                    <div class="message-wrapper received">
+                        <span class="message-author">
+                            <a href="{% url 'profile' message.owner.id %}">@{{ message.owner.username }}</a>
+                        </span>
+                        <div class="message-bubble">
+                            {{ message.body }}
+                        </div>
+                        <span class="message-time">{{ message.created_at|timesince }} ago</span>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <p class="empty-chat">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+
+        <form method="POST" class="chat-input-form">
+            {% csrf_token %}
+            <input
+                type="text"
+                name="body"
+                placeholder="Write a message..."
+                required
+                autocomplete="off"
+            >
+            <button type="submit" class="btn-send">
+                Send
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Auto-scroll chat stream to the newest message at the bottom
+    document.addEventListener('DOMContentLoaded', function () {
+        const stream = document.getElementById('messageStream');
+        if (stream) {
+            stream.scrollTop = stream.scrollHeight;
+        }
+    });
+</script>
+{% endblock %}

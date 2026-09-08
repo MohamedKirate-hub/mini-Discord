@@ -1,0 +1,59 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'conversation/conversations.css' %}">
+{% endblock %}
+
+{% block content%}
+<aside class="sidebar dm-sidebar">
+    <div class="sidebar-header">
+        <h3>Direct Messages</h3>
+        <span class="badge">{{ conversations.count }}</span>
+    </div>
+    <hr class="divider">
+    
+    <form method="GET" action="{% url 'conversations' request.user.id %}" class="dm-search-form">
+        <div class="dm-search-box">
+            <span class="search-icon">⌕</span>
+            <input
+                type="text"
+                name="query"
+                value="{{ request.GET.query }}"
+                placeholder="Search..."
+            >
+        </div>
+    </form>
+
+    <nav class="dm-list">
+        {% for conversation in conversations %}
+            {% for participant in conversation.participants.all %}
+                {% if participant != request.user %}
+                    <a href="{% url 'conversation' conversation.id %}" class="dm-item">
+                        <div class="dm-avatar">
+                            {{ participant.username|slice:":1"|upper }}
+                        </div>
+                        <div class="dm-details">
+                            <span class="dm-username">@{{ participant.username }}</span>
+                            {% if conversation.message.last %}
+                                <span class="dm-last-msg">
+                                    {{ conversation.message.last.body|truncatechars:28 }}
+                                </span>
+                            {% else %}
+                                <span class="dm-last-msg empty-msg">No messages yet</span>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endif %}
+            {% endfor %}
+        {% empty %}
+            <p class="empty-dms">No active conversations.</p>
+        {% endfor %}
+    </nav>
+
+    <!-- Footer Action -->
+    <div class="dm-sidebar-footer">
+        <a href="{% url 'profile' request.user.id %}" class="back-link">&larr; Go Back</a>
+    </div>
+</aside>
+{% endblock %}

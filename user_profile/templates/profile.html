@@ -9,7 +9,7 @@
 <div class="profile-container">
     <a href="{% url 'home' %}" class="back-link">&larr; Go back</a>
 
-    <!-- Profile Card Header -->
+    <!-- Profile Hero Card -->
     <section class="profile-card">
         <div class="profile-header">
             <div class="avatar-wrapper">
@@ -26,8 +26,9 @@
                     <div class="profile-header-actions">
                         {% if request.user == user %}
                             <a href="{% url 'edite-profile' user.id %}" class="btn-edit-profile">Edit Profile</a>
+                        {% else %}
+                            <a href="{% url 'create-conversation' user.id %}" class="btn-chat">Chat</a>
                         {% endif %}
-                        <a href="#" class="btn-chat">Chat</a>
                     </div>
                 </div>
                 {% if user.first_name or user.last_name %}
@@ -40,11 +41,14 @@
         </div>
     </section>
 
+    <!-- Grid Layout Wrapper (All 3 columns live inside here) -->
     <div class="profile-grid">
+        
+        <!-- Column 1: Topics Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h3>Topics</h3>
-                <span class="badge">{{ topics.all.count }}</span>
+                <span class="badge">{{ topics.count }}</span>
             </div>
             <hr class="divider">
             <nav class="topic-list">
@@ -57,7 +61,7 @@
             </nav>
         </aside>
 
-        <!-- Main Content Area -->
+        <!-- Column 2: Main Rooms Section -->
         <main class="rooms-section">
             <!-- Created Rooms Block -->
             <div class="rooms-group">
@@ -92,14 +96,14 @@
 
                         <div class="room-card-footer">
                             <span class="channel-count">
-                                {% if room.channels %}
-                                    {{ room.channels.all.count }} Channels Available
+                                {% if room.channels.exists %}
+                                    {{ room.channels.count }} Channels Available
                                 {% else %}
                                     No channel created yet
                                 {% endif %}
                             </span>
                             <div class="room-stats">
-                                <span class="participant-count">{{ room.participants.all.count }} Joined</span>
+                                <span class="participant-count">{{ room.participants.count }} Joined</span>
                                 {% if room.topic %}
                                     <span class="topic-badge">{{ room.topic.name }}</span>
                                 {% endif %}
@@ -135,14 +139,14 @@
 
                         <div class="room-card-footer">
                             <span class="channel-count">
-                                {% if room.channels %}
-                                    {{ room.channels.all.count }} Channels Available
+                                {% if room.channels.exists %}
+                                    {{ room.channels.count }} Channels Available
                                 {% else %}
                                     No channel created yet
                                 {% endif %}
                             </span>
                             <div class="room-stats">
-                                <span class="participant-count">{{ room.participants.all.count }} Joined</span>
+                                <span class="participant-count">{{ room.participants.count }} Joined</span>
                                 {% if room.topic %}
                                     <span class="topic-badge">{{ room.topic.name }}</span>
                                 {% endif %}
@@ -154,6 +158,37 @@
                 {% endfor %}
             </div>
         </main>
+
+        <!-- Column 3: Direct Messages Sidebar (Moved INSIDE profile-grid) -->
+        {% if request.user == user %}
+            <aside class="sidebar dm-sidebar">
+                <div class="sidebar-header">
+                    <h3>Direct Messages</h3>
+                    <span class="badge">{{ conversation_rooms.count }}</span>
+                </div>
+                <hr class="divider">
+                <nav class="dm-list">
+                    {% for conversation in conversation_rooms %}
+                        {% for participant in conversation.participants.all %}
+                            {% if participant != request.user %}
+                                <a href="{% url 'conversation' conversation.id %}" class="dm-item">
+                                    <div class="dm-avatar">
+                                        {{ participant.username|slice:":1"|upper }}
+                                    </div>
+                                    <div class="dm-details">
+                                        <span class="dm-username">@{{ participant.username }}</span>
+                                    </div>
+                                </a>
+                                <a href="{% url 'conversations' user.id %}">All messages</a>
+                            {% endif %}
+                        {% endfor %}
+                    {% empty %}
+                        <p class="empty-dms">No active conversations.</p>
+                    {% endfor %}
+                </nav>
+            </aside>
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}

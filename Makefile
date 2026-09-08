@@ -1,13 +1,16 @@
 run:
-	python manage.py runserver
+	python3 manage.py runserver
 
 makemigrations:
-	python manage.py makemigrations
+	python3 manage.py makemigrations
 
 migrate:
-	python manage.py migrate
+	python3 manage.py migrate
 
 superuser:
-	python manage.py createsuperuser
+	python3 manage.py createsuperuser
 
-.PHONY: run migrate makemigrations shell superuser test install freeze
+clean:
+	@find . -type d -name __pycache__ -exec rm -rf {} +
+
+.PHONY: run migrate makemigrations superuser clean
